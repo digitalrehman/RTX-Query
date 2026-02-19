@@ -1,14 +1,35 @@
-import React from "react";
-import { useGetAllProductQuery } from "./store/slice";
+import { useState } from "react";
+import {
+  useGetAllProductQuery,
+  useGetSpecificProductQuery,
+} from "./store/slice";
 
 const App = () => {
-  let { isLoading, isError, data } = useGetAllProductQuery();
-  if (isLoading) return <h1>Loading..</h1>;
-  if (isError) return <h1>{isError}</h1>;
+  let [selectedProduct, setSelectedProduct] = useState(null);
+  let { isLoading, isError, data, error } = useGetAllProductQuery();
+
+  let {
+    isLoading: isLoadingSpecific,
+    isError: isErrorSpecific,
+    error: errorSpecific,
+    data: dataSpecific,
+  } = useGetSpecificProductQuery(selectedProduct, { skip: !selectedProduct });
+  if (isLoading || isLoadingSpecific) return <h1>Loading..</h1>;
+  if (isError || isErrorSpecific) return <h1>{error || errorSpecific}</h1>;
   return (
     <div>
-      {data.map((item, index) => (
-        <h1 key={index}>{item.title}</h1>
+      {selectedProduct && (
+        <div>
+          <h1 style={{ color: "cyan" }}>{dataSpecific.title}</h1>
+          <p style={{ color: "yellow" }}>{dataSpecific.description}</p>
+        </div>
+      )}
+      {data?.map((item, index) => (
+        <div key={index}>
+          <h1>{item.title}</h1>
+          <button>Delete</button>
+          <button onClick={() => setSelectedProduct(item.id)}>Status</button>
+        </div>
       ))}
     </div>
   );

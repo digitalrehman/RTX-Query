@@ -1,23 +1,16 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import axios from "axios";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export let api = createApi({
-    baseQuery: async (url) => {
-        let response = await axios.get(url)
-        let data = response.data
-        return { data }
-    },
-    reducerPath: "fetchProduct",
-    endpoints: (builder) => ({
-        getAllProduct: builder.query({
-            queryFn: 
-        }),
-        getSpecificProduct: builder.query({
-            queryFn:
-        }),
-    })
-})
+  reducerPath: "fetchProduct",
+  baseQuery: fetchBaseQuery({ baseUrl: "https://fakestoreapi.com" }),
+  endpoints: (builder) => ({
+    getAllProduct: builder.query({
+      query: () => "/products",
+    }),
+    getSpecificProduct: builder.query({
+      query: (id) => `/products/${id}`,
+    }),
+  }),
+});
 
-
-export let { useGetAllProductQuery } = api
-
+export let { useGetAllProductQuery, useGetSpecificProductQuery } = api;
