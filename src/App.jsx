@@ -1,38 +1,35 @@
-import { useState } from "react";
-import {
-  useGetAllProductQuery,
-  useGetSpecificProductQuery,
-} from "./store/slice";
+import { Link, Outlet } from "react-router-dom";
 
-const App = () => {
-  let [selectedProduct, setSelectedProduct] = useState(null);
-  let { isLoading, isError, data, error } = useGetAllProductQuery();
-
-  let {
-    isLoading: isLoadingSpecific,
-    isError: isErrorSpecific,
-    error: errorSpecific,
-    data: dataSpecific,
-  } = useGetSpecificProductQuery(selectedProduct, { skip: !selectedProduct });
-  if (isLoading || isLoadingSpecific) return <h1>Loading..</h1>;
-  if (isError || isErrorSpecific) return <h1>{error || errorSpecific}</h1>;
+function App() {
   return (
-    <div>
-      {selectedProduct && (
-        <div>
-          <h1 style={{ color: "cyan" }}>{dataSpecific.title}</h1>
-          <p style={{ color: "yellow" }}>{dataSpecific.description}</p>
-        </div>
-      )}
-      {data?.map((item, index) => (
-        <div key={index}>
-          <h1>{item.title}</h1>
-          <button>Delete</button>
-          <button onClick={() => setSelectedProduct(item.id)}>Status</button>
-        </div>
-      ))}
+    <div className="min-h-screen bg-slate-50">
+      <header className="border-b border-slate-200 bg-white">
+        <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+          <Link to="/" className="text-xl font-bold text-slate-900">
+            RTX Query
+          </Link>
+          <div className="flex items-center gap-4">
+            <Link
+              to="/"
+              className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+            >
+              Home
+            </Link>
+            <Link
+              to="/cards"
+              className="rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white transition hover:bg-slate-700"
+            >
+              Cards
+            </Link>
+          </div>
+        </nav>
+      </header>
+
+      <main>
+        <Outlet />
+      </main>
     </div>
   );
-};
+}
 
 export default App;

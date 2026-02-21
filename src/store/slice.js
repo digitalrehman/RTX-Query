@@ -6,6 +6,7 @@ export let api = createApi({
   endpoints: (builder) => ({
     getAllProduct: builder.query({
       query: () => "/products",
+      providesTags: ["Products"],
     }),
     getSpecificProduct: builder.query({
       query: (id) => `/products/${id}`,
